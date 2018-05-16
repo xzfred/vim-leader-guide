@@ -244,6 +244,15 @@ function! s:create_string(layout) " {{{
     let row = 0
     let col = 0
     let smap = sort(filter(keys(s:lmap), 'v:val !=# "name"'),'1')
+
+    if exists('g:leaderGuide#map_filter')
+        for Fun in g:leaderGuide#map_filter
+            if Fun(a:layout, smap, s:lmap)
+                return 
+            endif
+        endfor
+    endif
+
     for k in smap
         let desc = type(s:lmap[k]) == type({}) ? s:lmap[k].name : s:lmap[k][1]
         let displaystring = "[".s:show_displayname(k)."] ".desc
