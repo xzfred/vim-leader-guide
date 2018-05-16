@@ -162,7 +162,6 @@ function! s:flattenmap(dict, str) " {{{
     return ret
 endfunction " }}}
 
-
 function! s:escape_mappings(mapping) " {{{
     let feedkeyargs = a:mapping.noremap ? "nt" : "mt"
     let rstring = substitute(a:mapping.rhs, '\', '\\\\', 'g')
@@ -283,6 +282,10 @@ function! s:create_string(layout) " {{{
                 let col += 1
             endif
         endif
+        silent execute "cnoremap <nowait> <buffer> ".substitute(k, "|", "<Bar>", ""). " " . s:escape_keys(k) ."<CR>"
+    endfor
+    for i in range(33, 126)
+        let k = nr2char(i)
         silent execute "cnoremap <nowait> <buffer> ".substitute(k, "|", "<Bar>", ""). " " . s:escape_keys(k) ."<CR>"
     endfor
     let r = []
