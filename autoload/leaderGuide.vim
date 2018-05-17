@@ -254,7 +254,7 @@ function! s:create_string(layout) " {{{
 
     for k in smap
         let desc = type(s:lmap[k]) == type({}) ? s:lmap[k].name : s:lmap[k][1]
-        let displaystring = "[".s:show_displayname(k)."] ".desc
+        let displaystring = "[".s:show_displayname(k)."] ". desc
         let crow = get(rows, row, [])
         if empty(crow)
             call add(rows, crow)
@@ -284,10 +284,10 @@ function! s:create_string(layout) " {{{
         endif
         silent execute "cnoremap <nowait> <buffer> ".substitute(k, "|", "<Bar>", ""). " " . s:escape_keys(k) ."<CR>"
     endfor
-    for i in range(33, 126)
-        let k = nr2char(i)
-        silent execute "cnoremap <nowait> <buffer> ".substitute(k, "|", "<Bar>", ""). " " . s:escape_keys(k) ."<CR>"
-    endfor
+    "for i in range(33, 126)
+        "let k = nr2char(i)
+        "silent execute "cnoremap <nowait> <buffer> ".substitute(k, "|", "<Bar>", ""). " " . s:escape_keys(k) ."<CR>"
+    "endfor
     let r = []
     let mlen = 0
     for ro in rows
@@ -328,7 +328,7 @@ function! s:start_buffer() " {{{
     setlocal nomodifiable
     call s:wait_for_input()
 endfunction " }}}
-function! s:handle_input(input) " {{{
+function! s:handle_input(input, ...) " {{{
     call s:winclose()
     if type(a:input) ==? type({})
         let s:lmap = a:input
@@ -341,6 +341,9 @@ function! s:handle_input(input) " {{{
         catch
             unsilent echom v:exception
         endtry
+    "elseif type(a:input) ==? type([])
+    "elseif a:0 > 0
+        "call feedkeys(a:1, 't')
     endif
 endfunction " }}}
 function! s:wait_for_input() " {{{
@@ -352,7 +355,7 @@ function! s:wait_for_input() " {{{
         call s:submode_mappings()
     else
         let fsel = get(s:lmap, inp)
-        call s:handle_input(fsel)
+        call s:handle_input(fsel, inp)
     endif
 endfunction " }}}
 function! s:winopen() " {{{
